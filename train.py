@@ -17,7 +17,7 @@ from dataset import get_dataloader
 def parse_arg():
     parser = argparse.ArgumentParser(description='PyTorch Training')
     # Param
-    parser.add_argument('--dataset-path', default="/home/chengl/ub62/luocheng/datasets/S-L", type=str, help="dataset path")
+    parser.add_argument('--dataset-path', default="your path", type=str, help="dataset path")
     parser.add_argument('--resume', default="", type=str, help="checkpoint path")
     parser.add_argument('-b', '--batch-size', default=4, type=int, metavar='N', help='mini-batch size (default: 4)')
     parser.add_argument('-lr', '--learning-rate', default=0.0001, type=float, metavar='LR',
