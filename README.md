@@ -5,6 +5,10 @@
 [[Homepage]](xxxxxxxx)  [[Reference Paper]](https://arxiv.org/pdf/2305.15748) [[Code]](https://github.com/lingjivoo/ReactFace)
 
 
+📢 News
+=
+Our paper is accepted by IEEE Transactions on Visualization and Computer Graphics (TVCG)
+
 
 ## 🛠️ Installation
 
@@ -123,3 +127,52 @@ Then, we use a 3D-to-2D tool [PIRender](https://github.com/RenYurui/PIRender) to
    
 </p>
 </details>
+
+
+
+<details><summary> <b> Training </b>  </summary>
+<p>
+
+- Running the following shell can start training ReactFace:
+ ```shell
+python train.py   --batch-size 4  --window-size 64  --momentum 0.1  --gpu-ids 0   -lr 0.00002   -e 200  -j 10  --kl-p 0.00001  --outdir results/training-reactface --div-p 100 --if-visual --if-audio  --if-vim --if-mim
+ ```
+
+</p>
+</details>
+
+
+<details><summary> <b> Evaluation </b>  </summary>
+<p>
+
+- Running the following shell can evaluate trained ReactFace:
+ ```shell
+CUDA_VISIBLE_DEVICES=0 python evaluate.py --batch-size 16 --momentum 0.999  --window-size 8 --gpu-ids 0 --if-visual --if-audio  --if-vim --if-mim --outdir results/test-reactface  --resume results/training-reactface/best_checkpoint.pth
+ ```
+
+</p>
+</details>
+
+
+## 🖊️ Citation
+=
+if the code or method help you in the research, please cite the following paper:
+```
+@article{luo2023reactface,
+  title={Reactface: Multiple appropriate facial reaction generation in dyadic interactions},
+  author={Luo, Cheng and Song, Siyang and Xie, Weicheng and Spitale, Micol and Shen, Linlin and Gunes, Hatice},
+  journal={arXiv preprint arXiv:2305.15748},
+  year={2023}
+}
+```
+
+
+## 🤝 Acknowledgement
+Thanks to the open source of the following projects:
+
+- [FaceVerse](https://github.com/LizhenWangT/FaceVerse) &#8194;
+
+- [PIRender](https://github.com/RenYurui/PIRender) &#8194;
+
+
+
