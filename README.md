@@ -264,6 +264,21 @@ python evaluate_metric.py \
   --gt-listener-3dmm-path ./metric/gt/tdmm_listener.npy \
   --gn-listener-3dmm-path ./results/eval/test/coeffs/tdmm_10x.npy
 ```
+Assessing realism by FVD:
+
+- Download model(rgb_imagenet.pt) from the [lib](https://github.com/piergiaj/pytorch-i3d)
+- Put the model to the folder ```metric/FVD/pytorch_i3d_model/models```
+- Execute the following command to compute the FVD metric:
+
+```bash
+python metric/FVD/fvd_eval.py \
+  --source-dir PATH/TO/A-COLLECTION-OF-GT-LISTENER-VIDEOS \
+  --target-dir /path/to/your/generated/videos \
+  --model-path metric/FVD/pytorch_i3d_model/models/rgb_imagenet.pt \
+  --num-videos 100 \
+  --frame-size 224 \
+  --max-frames 750
+```
 
 </details>
 
