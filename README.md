@@ -29,20 +29,27 @@
 - CUDA 11.8+
 
 ### Setup Environment
-```bash
+
 # Create and activate conda environment
+```bash
 conda create -n react python=3.9
 conda activate react
+```
 
 # Install PyTorch
+```bash
 pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cu118
+```
 
 # Install PyTorch3D
+```bash
 pip install --no-index --no-cache-dir pytorch3d -f https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py39_cu118_pyt201/download.html
+```
 
 # Install other dependencies
+```bash
 pip install -r requirements.txt
-
+```
 
 
 
@@ -113,6 +120,7 @@ data
            ├── group-3
             
 ```
+
  Important details:
 - Task: Predict one role's reaction ('Expert' or 'Novice', 'P25' or 'P26') to the other
 - 3D_FV_files contain 3DMM coefficients (expression: 52 dim, angle: 3 dim, translation: 3 dim)
@@ -165,8 +173,9 @@ python train.py \
   --div-p 100 \
   --rendering \
   --outdir results/train-reactface
-
+```
 Training without rendering during validation (faster):
+```
 python train.py \
   --batch-size 8 \
   --window-size 64 \
@@ -179,7 +188,7 @@ python train.py \
   --kl-p 0.00001 \
   --div-p 100 \
   --outdir results/train-reactface
-
+```
 
 
 
@@ -188,7 +197,7 @@ python train.py \
 <p>
 
 - Running the following shell can evaluate trained ReactFace:
- ```shell
+ ```bash
 python evaluate.py \
   --split test \
   --batch-size 16 \
@@ -223,7 +232,7 @@ If this work helps in your research, please cite the following papers:
     journal={arXiv preprint arXiv:2305.15748},
     year={2023}
 }
-
+```
 
 ## 🤝 Acknowledgement
 Thanks to the open source of the following projects:
