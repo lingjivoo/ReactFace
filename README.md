@@ -130,7 +130,10 @@ Important details:
   - Audio sampling rate: 44100
 - CSV files for training/validation are available at: 'data/train.csv', 'data/val.csv', 'data/test.csv'
 
-### Download Additional Resources
+</details>
+
+<details>
+<summary><b>Download Additional Resources</b></summary>
 
 1. **Listener Reaction Neighbors**
    - Download the appropriate listener reaction neighbors dataset from [here](https://drive.google.com/drive/folders/1gi1yzP3dUti8fJy2HToiijPuyRyzokdh?usp=sharing)
