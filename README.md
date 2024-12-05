@@ -24,7 +24,7 @@ Our paper is accepted by IEEE Transactions on Visualization and Computer Graphic
 conda create -n react python=3.9
 conda activate react
 pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cu118
-pip install git+https://github.com/facebookresearch/pytorch3d.git
+pip install --no-index --no-cache-dir pytorch3d -f https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py39_cu118_pyt201/download.html
 pip install -r requirements.txt
 ```
 
