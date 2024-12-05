@@ -145,6 +145,8 @@ Important details:
 
 </details>
 
+---
+
 ### 2. External Tool Preparation
 <details>
 <summary><b>Required Models and Tools</b></summary>
@@ -165,6 +167,8 @@ We use 3DMM coefficients for 3D listener/speaker representation and 3D-to-2D fra
    - Place in `external/PIRender/`
 
 </details>
+
+---
 
 ### 3. Training
 <details>
@@ -205,7 +209,7 @@ python train.py \
 
 </details>
 
-
+---
 
 ### 4. Evaluation
 <details>
