@@ -19,8 +19,8 @@ def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='3D Face Metrics Computation')
     parser.add_argument('--dataset-path', default="/Path/To/Dataset_root", type=str)
     parser.add_argument('--split', type=str, choices=["val", "test"], required=True)
-    parser.add_argument('--gt-speaker-3dmm-path', default="metric/gt/coeffs/tdmm_speaker.npy", type=str)
-    parser.add_argument('--gt-listener-3dmm-path', default="metric/gt/coeffs/tdmm_listener.npy", type=str)
+    parser.add_argument('--gt-speaker-3dmm-path', default="metric/gt/tdmm_speaker.npy", type=str)
+    parser.add_argument('--gt-listener-3dmm-path', default="metric/gt/tdmm_listener.npy", type=str)
     parser.add_argument('--gn-listener-3dmm-path',
                         default="PATH/TO/Generated_listener_reactions.npy", type=str)
     return parser.parse_args()
