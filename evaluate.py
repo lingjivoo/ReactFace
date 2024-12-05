@@ -1,141 +1,283 @@
 import os
-import numpy as np
 import torch
-import torch.nn as nn
-from torch.utils.data import DataLoader
-import torch.optim as optim
-import argparse
+import numpy as np
+from pathlib import Path
 from tqdm import tqdm
-import logging
-from dataset import ReactionDataset
-from model import TransformerVAE
-from utils import AverageMeter
-from render import Render
-from model.losses import VAELoss
-from metric import *
-from dataset import get_dataloader
+from typing import List, Tuple, Optional
+from dataclasses import dataclass
 
-def parse_arg():
-    parser = argparse.ArgumentParser(description='PyTorch Training')
-    # Param
-    parser.add_argument('--dataset-path', default="./data", type=str, help="dataset path")
-    parser.add_argument('--split', type=str, help="split of dataset", choices=["val", "test"], required=True)
-    parser.add_argument('--resume', default="", type=str, help="checkpoint path")
+from dataset import get_dataloader
+from model import ReactFace
+from render import Render
+
+
+@dataclass
+class EvalConfig:
+    """Configuration for evaluation."""
+    dataset_path: str
+    split: str
+    resume: str = ""
+    batch_size: int = 4
+    num_workers: int = 8
+    img_size: int = 256
+    crop_size: int = 224
+    max_seq_len: int = 800
+    window_size: int = 8
+    clip_length: int = 751
+    feature_dim: int = 128
+    audio_dim: int = 768
+    tdmm_dim: int = 58
+    outdir: str = "./results"
+    device: str = 'cuda'
+    momentum: float = 0.99
+    rendering: bool = False
+
+class Evaluator:
+    def __init__(
+            self,
+            config: EvalConfig,
+            model: torch.nn.Module,
+            test_loader: torch.utils.data.DataLoader,
+            render: Optional[Render] = None
+    ):
+        self.config = config
+        self.model = model
+        self.test_loader = test_loader
+        self.render = render
+        self.device = torch.device(config.device)
+
+        # Setup output directories
+        self.output_dir = Path(config.outdir) / config.split
+        self.coeffs_dir = self.output_dir / 'coeffs'
+        self.video_dirs = [self.output_dir / f'video{i + 1}' for i in range(10)]
+
+        # Create directories
+        self.coeffs_dir.mkdir(parents=True, exist_ok=True)
+        for video_dir in self.video_dirs:
+            video_dir.mkdir(parents=True, exist_ok=True)
+
+        self.mean_face = torch.FloatTensor(
+            np.load('external/FaceVerse/mean_face.npy')
+        ).view(1, 1, -1)
+
+    def load_checkpoint(self) -> None:
+        """Load model checkpoint."""
+        if self.config.resume:
+            print(f"Loading checkpoint from {self.config.resume}")
+            checkpoint = torch.load(
+                self.config.resume,
+                map_location='cpu'
+            )
+            self.model.load_state_dict(checkpoint['state_dict'])
+        self.model.eval()
+
+    @torch.no_grad()
+    def evaluate(self) -> None:
+        """Run evaluation."""
+        self.load_checkpoint()
+
+        all_listener_3dmm_list = []
+
+        # First generation
+        print("Generating first prediction...")
+        listener_3dmm_list = []
+
+        for batch_idx, batch in enumerate(tqdm(self.test_loader)):
+            speaker_video, speaker_audio, speaker_3dmm, listener_video, _, listener_ref, _,  video_path = batch
+
+            # Move to device and handle sequence length
+            speaker_video = speaker_video[:, :750].to(self.device)
+            speaker_audio = speaker_audio.to(self.device)
+
+            if self.config.rendering:
+                listener_ref = listener_ref.to(self.device)
+
+            # Generate prediction
+            past_reaction_3dmm = torch.zeros(
+                speaker_video.size(0),
+                self.config.window_size,
+                self.config.tdmm_dim,
+                device=self.device
+            )
+            past_motion_sample = None
+
+            # Process in windows
+            predictions = []
+            audio_internal = speaker_audio.shape[1] // speaker_video.shape[1]
+
+            for i in range(0, 750, self.config.window_size):
+                end_idx = min(i + self.config.window_size, 750)
+                current_video = speaker_video[:, :end_idx]
+                current_audio = speaker_audio[:, : end_idx * audio_internal]
+
+                current_3dmm, current_motion_sample = self.model.inference_step(
+                    current_video,
+                    current_audio,
+                    past_reaction_3dmm,
+                    past_motion_sample
+                )
+
+                predictions.append(current_3dmm)
+                past_reaction_3dmm = current_3dmm
+                past_motion_sample = current_motion_sample
+
+            listener_3dmm_out = torch.cat(predictions, dim=1)[:, :750]
+
+            # Save first generation video if rendering
+            if self.config.rendering:
+                video_name = '_'.join(video_path[0].split('/'))
+                render_vectors = (listener_3dmm_out + self.mean_face.to(self.device))[0]
+                self.render.rendering_2d(
+                    str(self.video_dirs[0]),
+                    video_name,
+                    render_vectors,
+                    listener_ref[0]
+                )
+
+            listener_3dmm_list.append(listener_3dmm_out.cpu() + self.mean_face)
+
+        # Combine first generation results
+        listener_3dmm = torch.cat(listener_3dmm_list, dim=0)
+        all_listener_3dmm_list.append(listener_3dmm.unsqueeze(1))
+
+        print("Saving predictions...")
+        np.save(
+            self.coeffs_dir / 'tdmm_1x.npy',
+            listener_3dmm.numpy().astype(np.float32)
+        )
+
+        # Generate 9 more times
+        print("Generating 9 more predictions...")
+        for gen_idx in range(9):
+            print(f"----- Generation {gen_idx + 2}/10 -----")
+            listener_3dmm_list = []
+
+            for batch_idx, batch in enumerate(tqdm(self.test_loader)):
+                speaker_video, speaker_audio = batch[0][:, :750].to(self.device), batch[1].to(self.device)
+
+                # Generate prediction using sliding window
+                past_reaction_3dmm = torch.zeros(
+                    speaker_video.size(0),
+                    self.config.window_size,
+                    self.config.tdmm_dim,
+                    device=self.device
+                )
+                past_motion_sample = None
+
+                predictions = []
+                audio_internal = speaker_audio.shape[1] // speaker_video.shape[1]
+                for i in range(0, 750, self.config.window_size):
+                    end_idx = min(i + self.config.window_size, 750)
+                    current_video = speaker_video[:, :end_idx]
+                    current_audio = speaker_audio[:, : end_idx * audio_internal]
+
+                    current_3dmm, current_motion_sample = self.model.inference_step(
+                        current_video,
+                        current_audio,
+                        past_reaction_3dmm,
+                        past_motion_sample
+                    )
+
+                    predictions.append(current_3dmm)
+                    past_reaction_3dmm = current_3dmm
+                    past_motion_sample = current_motion_sample
+
+                listener_3dmm_out = torch.cat(predictions, dim=1)[:, :750]
+                listener_3dmm_list.append(listener_3dmm_out.cpu() + self.mean_face)
+
+            # Combine results for this generation
+            listener_3dmm = torch.cat(listener_3dmm_list, dim=0)
+            all_listener_3dmm_list.append(listener_3dmm.unsqueeze(1))
+
+        # Save all predictions
+        all_listener_3dmm = torch.cat(all_listener_3dmm_list, dim=1)
+
+        print("Saving predictions...")
+        np.save(
+            self.coeffs_dir / 'tdmm_10x.npy',
+            all_listener_3dmm.numpy().astype(np.float32)
+        )
+        print(f"Evaluation complete. Results saved to {self.output_dir}")
+
+
+def main():
+    """Main function."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description='ReactFace Evaluation')
+    parser.add_argument('--dataset-path', default="Path/To/Dataset_root", type=str, help="dataset path")
+    parser.add_argument('--split', required=True, choices=['val', 'test'], help='Dataset split')
+    parser.add_argument('--resume', default='', help='Path to checkpoint')
+    parser.add_argument('--outdir', default='./results', help='Output directory')
+    parser.add_argument('--gpu-ids', default='0', help='GPU IDs to use')
+    parser.add_argument('--window-size', type=int, default=8, help='Window size for inference')
+    parser.add_argument('--rendering', action='store_true', help='Enable rendering')
+    parser.add_argument('--momentum', type=float, default=0.99)
+    parser.add_argument('-j', '--num_workers', default=4, type=int, metavar='N',
+                        help='number of data loading workers (default: 4)')
     parser.add_argument('-b', '--batch-size', default=4, type=int, metavar='N', help='mini-batch size (default: 4)')
-    parser.add_argument('-j', '--num_workers', default=8, type=int, metavar='N',
-                        help='number of data loading workers (default: 8)')
-    parser.add_argument('--img-size', default=256, type=int, help="size of train/test image data")
-    parser.add_argument('--crop-size', default=224, type=int, help="crop size of train/test image data")
-    parser.add_argument('-seq-len', default=751, type=int, help="length of clip")
-    parser.add_argument('--window-size', default=8, type=int, help="prediction window-size for online mode")
-    parser.add_argument('--feature-dim', default=128, type=int, help="feature dim of model")
-    parser.add_argument('--audio-dim', default=39, type=int, help="feature dim of audio")
-    parser.add_argument('--_3dmm-dim', default=58, type=int, help="feature dim of 3dmm")
-    parser.add_argument('--emotion-dim', default=25, type=int, help="feature dim of emotion")
-    parser.add_argument('--online', action='store_true', help='online / offline method')
-    parser.add_argument('--outdir', default="./results", type=str, help="result dir")
-    parser.add_argument('--device', default='cuda', type=str, help="device: cuda / cpu")
-    parser.add_argument('--gpu-ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
-    parser.add_argument('--kl-p', default=0.0002, type=float, help="hyperparameter for kl-loss")
 
     args = parser.parse_args()
-    return args
 
+    # Create config
+    config = EvalConfig(
+        dataset_path=args.dataset_path,
+        split=args.split,
+        resume=args.resume,
+        window_size=args.window_size,
+        outdir=args.outdir,
+        rendering=args.rendering,
+        momentum = args.momentum,
+        num_workers = args.num_workers,
+        batch_size = args.batch_size
+    )
 
-# Train
-def val(args, model, val_loader, criterion, render):
-    losses = AverageMeter()
-    rec_losses = AverageMeter()
-    kld_losses = AverageMeter()
-    model.eval()
-
-    out_dir = os.path.join(args.outdir, args.split)
-    if not os.path.exists(out_dir):
-        os.makedirs(out_dir)
-
-    listener_emotion_list = []
-    speaker_emotion_list = []
-    all_listener_emotion_list = []
-
-    for batch_idx, (speaker_video_clip, speaker_audio_clip, speaker_emotion, listener_video_clip, _, listener_emotion, listener_3dmm, listener_references) in enumerate(tqdm(val_loader)):
-        if torch.cuda.is_available():
-            speaker_video_clip, speaker_audio_clip, listener_emotion, listener_3dmm, listener_references = \
-                speaker_video_clip[:,:750].cuda(), speaker_audio_clip[:,:750].cuda(), listener_emotion[:,:750].cuda(), listener_3dmm[:,:750].cuda(), listener_references[:,:750].cuda()
-
-        with torch.no_grad():
-            listener_3dmm_out, listener_emotion_out, distribution = model(speaker_video_clip, speaker_audio_clip)
-
-            loss, rec_loss, kld_loss = criterion(listener_emotion, listener_3dmm, listener_emotion_out, listener_3dmm_out, distribution)
-
-            losses.update(loss.data.item(), speaker_video_clip.size(0))
-            rec_losses.update(rec_loss.data.item(), speaker_video_clip.size(0))
-            kld_losses.update(kld_loss.data.item(), speaker_video_clip.size(0))
-            B = speaker_video_clip.shape[0]
-            if (batch_idx % 25) == 0:
-                for bs in range(B):
-                    render.rendering_for_fid(out_dir, "{}_b{}_ind{}".format(args.split, str(batch_idx + 1), str(bs + 1)),
-                            listener_3dmm_out[bs], speaker_video_clip[bs], listener_references[bs], listener_video_clip[bs,:750])
-            listener_emotion_list.append(listener_emotion_out.cpu())
-            speaker_emotion_list.append(speaker_emotion)
-
-    listener_emotion = torch.cat(listener_emotion_list, dim = 0)
-    speaker_emotion = torch.cat(speaker_emotion_list, dim = 0)
-    all_listener_emotion_list.append(listener_emotion.unsqueeze(1))
-
-    print("-----------------Repeat 9 times-----------------")
-    for i in range(9):
-        listener_emotion_list = []
-        for batch_idx, (speaker_video_clip, speaker_audio_clip, _, _, _, _, _, _) in enumerate(tqdm(val_loader)):
-            if torch.cuda.is_available():
-                speaker_video_clip, speaker_audio_clip = \
-                    speaker_video_clip[:,:750].cuda(), speaker_audio_clip[:,:750].cuda()
-            with torch.no_grad():
-                _, listener_emotion_outs, _ = model(speaker_video_clip, speaker_audio_clip)
-                listener_emotion_list.append(listener_emotion_outs[:,:750].cpu())
-        listener_emotion = torch.cat(listener_emotion_list, dim=0)
-        all_listener_emotion_list.append(listener_emotion.unsqueeze(1))
-    all_listener_emotion = torch.cat(all_listener_emotion_list, dim=1)
-
-    print("-----------------Evaluating Metric-----------------")
-    FRC = compute_FRC_mp(args, all_listener_emotion, listener_emotion)
-    FRD = compute_FRD_mp(args, all_listener_emotion, listener_emotion)
-    FRDvs = compute_FRDvs(all_listener_emotion)
-    FRVar  = compute_FRVar(all_listener_emotion)
-    smse  = compute_s_mse(all_listener_emotion)
-    TLCC = compute_TLCC(all_listener_emotion, speaker_emotion)
-
-    return losses.avg, rec_losses.avg, kld_losses.avg, FRC, FRD, FRDvs, FRVar, smse, TLCC
-
-
-def main(args):
-    val_loader = get_dataloader(args, args.split)
-    model = TransformerVAE(img_size = args.img_size, audio_dim = args.audio_dim, output_emotion_dim = args.emotion_dim, output_3dmm_dim = args._3dmm_dim, feature_dim = args.feature_dim, seq_len = args.seq_len, online = args.online, window_size = args.window_size, device = args.device)
-    criterion = VAELoss(args.kl_p)
-
-    if args.resume != '':
-        checkpoint_path = args.resume
-        print("Resume from {}".format(checkpoint_path))
-        checkpoints = torch.load(checkpoint_path, map_location=torch.device('cpu'))
-        state_dict = checkpoints['state_dict']
-        model.load_state_dict(state_dict)
-
-    if torch.cuda.is_available():
-        model = model.cuda()
-        render = Render('cuda')
-    else:
-        render = Render()
-
-    val_loss, rec_loss, kld_loss, FRC, FRD, FRDvs, FRVar, smse, TLCC = val(args, model, val_loader, criterion, render)
-    print("{}_loss: {:.5f}   {}_rec_loss: {:.5f}  {}_kld_loss: {:.5f} ".format(args.split, val_loss, args.split, rec_loss, args.split, kld_loss))
-    print("Metric: | FRC: {:.5f}| FRD: {:.5f}| FRDvs: {:.5f}| FRVar: {:.5f}| S-MSE: {:.5f}| TLCC: {:.5f}".format(FRC, FRD, FRDvs, FRVar, smse, TLCC))
-
-
-# ---------------------------------------------------------------------------------
-
-
-if __name__=="__main__":
-    args = parse_arg()
-    os.environ["NUMEXPR_MAX_THREADS"] = '16'
+    # Set GPU devices
     os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_ids
-    main(args)
+    os.environ["NUMEXPR_MAX_THREADS"] = '16'
 
+    # Create data loader based on rendering flag
+    if config.rendering:
+        test_loader = get_dataloader(
+            config,
+            config.split,
+            load_audio=True,
+            load_video_s=True,
+            load_video_l=True,
+            load_3dmm_l=False,
+            load_ref=True
+        )
+    else:
+        test_loader = get_dataloader(
+            config,
+            config.split,
+            load_audio=True,
+            load_video_s=True,
+            load_video_l=False,
+            load_3dmm_l=False,
+            load_ref=True
+        )
+
+    # Create model
+    model = ReactFace(
+        img_size=config.img_size,
+        output_3dmm_dim=config.tdmm_dim,
+        feature_dim=config.feature_dim,
+        max_seq_len=config.max_seq_len,
+        window_size=config.window_size,
+        device=config.device,
+    ).to(config.device)
+    model.reset_window_size(config.window_size)
+
+    # Initialize render if needed
+    render = None
+    if config.rendering:
+        render = Render('cuda' if torch.cuda.is_available() else 'cpu')
+
+    # Create evaluator and run evaluation
+    evaluator = Evaluator(config, model, test_loader, render)
+    evaluator.evaluate()
+
+
+if __name__ == "__main__":
+    main()
