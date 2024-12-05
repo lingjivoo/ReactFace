@@ -57,7 +57,6 @@ data
                    ├── ....
            ├── ....
        ├── RECOLA
-       ├── UDIVA
    ├── Audio_files
        ├── NoXI
        ├── RECOLA
@@ -68,7 +67,6 @@ data
                    ├── ....
            ├── group-2
            ├── group-3
-       ├── UDIVA
    ├── Emotion
        ├── NoXI
        ├── RECOLA
@@ -79,7 +77,6 @@ data
                    ├── ....
            ├── group-2
            ├── group-3
-       ├── UDIVA
    ├── 3D_FV_files
        ├── NoXI
        ├── RECOLA
@@ -90,7 +87,6 @@ data
                    ├── ....
            ├── group-2
            ├── group-3
-       ├── UDIVA
             
 ```
  
@@ -135,7 +131,7 @@ Then, we use a 3D-to-2D tool [PIRender](https://github.com/RenYurui/PIRender) to
 
 - Running the following shell can start training ReactFace:
  ```shell
-python train.py   --batch-size 4  --window-size 64  --momentum 0.1  --gpu-ids 0   -lr 0.00002   -e 200  -j 10  --kl-p 0.00001  --outdir results/training-reactface --div-p 100 --if-visual --if-audio  --if-vim --if-mim
+python train.py   --batch-size 8 --window-size 64  --momentum 0.1  --gpu-ids 0  -lr 0.00002   -e 200  -j 4  --sm-p 10  --kl-p 0.00001  --div-p 100  --rendering --outdir results/train-reactface  
  ```
 
 </p>
@@ -147,7 +143,7 @@ python train.py   --batch-size 4  --window-size 64  --momentum 0.1  --gpu-ids 0 
 
 - Running the following shell can evaluate trained ReactFace:
  ```shell
-CUDA_VISIBLE_DEVICES=0 python evaluate.py --batch-size 16 --momentum 0.999  --window-size 8 --gpu-ids 0 --if-visual --if-audio  --if-vim --if-mim --outdir results/test-reactface  --resume results/training-reactface/best_checkpoint.pth
+python evaluate.py  --split test  --batch-size 16  --window-size 8  --momentum 0.9  --gpu-ids 0   -j 4  --outdir results/eval --resume results/training-reactface/best_checkpoint.pth
  ```
 
 </p>
