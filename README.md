@@ -205,6 +205,7 @@ python evaluate.py \
   --momentum 0.9 \
   --gpu-ids 0 \
   -j 4 \
+  --rendering \
   --outdir results/eval \
   --resume results/training-reactface/best_checkpoint.pth
 ```
