@@ -231,21 +231,24 @@ python evaluate.py \
 <details>
 <summary><b>Metric-based Evaluations</b></summary>
 Our evaluation methodology is based on established research in Multiple Appropriate Listener Reaction:
+<div align="center">
 [![Paper1](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/pdf/2306.06583)
 [![Paper2](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/pdf/2401.05166)
 [![Paper3](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/pdf/2302.06514)
-
+</div>
+   
 #### Metrics Overview
 
-#### Diversity Metrics
+##### Diversity Metrics
 - **FRDvs**: Measures diversity across speaker behavior conditions
 - **FRVar**: Evaluates diversity within a single generated facial reaction sequence
 - **FRDiv**: Assesses diversity of different generated listener reactions to the same speaker behavior
 
-#### Quality Metrics
+##### Quality Metrics
 - **FRRea**: Uses Fréchet Video Distance (FVD) to evaluate realism of generated video sequences
 - **FRCorr**: Measures appropriateness by correlating each generated facial reaction with its most similar real facial reaction
 - **FRSyn**: Evaluates synchronization between generated listener reactions and varying speaker sequences
+
 
 #### Running Evaluation
 
