@@ -1,7 +1,7 @@
 # ReactFace: Online Multiple Appropriate Facial Reaction Generation in Dyadic Interactions
 
 
-[[Homepage]](xxxxxxxx)  [[Paper]](https://arxiv.org/pdf/2305.15748)(https://ieeexplore.ieee.org/abstract/document/10756784) [[Code]](https://github.com/lingjivoo/ReactFace)
+[[Project Page]](xxxxxxxx)  [[Paper1]](https://arxiv.org/pdf/2305.15748)  [[Paper2]](https://ieeexplore.ieee.org/abstract/document/10756784) [[Code]](https://github.com/lingjivoo/ReactFace)
 
 
 📢 News
