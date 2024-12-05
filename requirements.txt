@@ -1,0 +1,14 @@
+tqdm
+transformers==4.39.3
+tslearn==0.6.2
+scipy
+scikit-video
+scikit-image
+soundfile
+Pillow
+pandas
+numpy
+opencv_python
+opencv_contrib_python
+librosa
+
