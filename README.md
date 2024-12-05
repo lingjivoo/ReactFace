@@ -289,6 +289,9 @@ python metric/FVD/fvd_eval.py \
 
 </details>
 
+---
+
+
 ## 🖊️ Citation
 
 If this work helps in your research, please cite the following papers:
