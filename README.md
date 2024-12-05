@@ -231,10 +231,13 @@ python evaluate.py \
 <details>
 <summary><b>Metric-based Evaluations</b></summary>
 Our evaluation methodology is based on established research in Multiple Appropriate Listener Reaction:
-<div align="center">
+
+<div>
+    
 [![Paper1](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/pdf/2306.06583)
 [![Paper2](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/pdf/2401.05166)
 [![Paper3](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/pdf/2302.06514)
+
 </div>
    
 #### Metrics Overview
