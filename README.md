@@ -16,15 +16,15 @@ Our paper is accepted by IEEE Transactions on Visualization and Computer Graphic
 
 - Python 3.8+ 
 - PyTorch 1.9+
-- CUDA 11.1+
+- CUDA 11.8+
 
 ### Install Python dependencies (all included in 'requirements.txt')
 
 ```shell
-conda create -n react python=3.8
+conda create -n react python=3.9
 conda activate react
+pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cu118
 pip install git+https://github.com/facebookresearch/pytorch3d.git
-pip install torch==1.9.1+cu111 torchvision==0.10.1+cu111 torchaudio==0.9.1 -f https://download.pytorch.org/whl/torch_stable.html
 pip install -r requirements.txt
 ```
 
@@ -158,6 +158,14 @@ CUDA_VISIBLE_DEVICES=0 python evaluate.py --batch-size 16 --momentum 0.999  --wi
 =
 if the code or method help you in the research, please cite the following paper:
 ```
+@article{luo2024reactface,
+  title={ReactFace: Online Multiple Appropriate Facial Reaction Generation in Dyadic Interactions},
+  author={Luo, Cheng and Song, Siyang and Xie, Weicheng and Spitale, Micol and Ge, Zongyuan and Shen, Linlin and Gunes, Hatice},
+  journal={IEEE Transactions on Visualization and Computer Graphics},
+  year={2024},
+  publisher={IEEE}
+}
+
 @article{luo2023reactface,
   title={Reactface: Multiple appropriate facial reaction generation in dyadic interactions},
   author={Luo, Cheng and Song, Siyang and Xie, Weicheng and Spitale, Micol and Shen, Linlin and Gunes, Hatice},
