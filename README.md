@@ -20,7 +20,7 @@
 - [Citation](#citation)
 - [Acknowledgements](#acknowledgements)
 
-## Installation
+## 🛠️ Installation
 
 ### Prerequisites
 
@@ -51,7 +51,7 @@ pip install --no-index --no-cache-dir pytorch3d -f https://dl.fbaipublicfiles.co
 pip install -r requirements.txt
 ```
 
-## Getting Started
+## 👨‍🏫 Getting Started
 
 ### 1. Data Preparation
 <details>
@@ -285,7 +285,7 @@ python metric/FVD/fvd_eval.py \
 
 </details>
 
-## Citation
+## 🖊️ Citation
 
 If this work helps in your research, please cite the following papers:
 
@@ -309,7 +309,7 @@ If this work helps in your research, please cite the following papers:
 }
 ```
 
-## Acknowledgements
+## 🤝 Acknowledgements
 
 Thanks to the open source of the following projects:
 
