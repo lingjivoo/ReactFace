@@ -1,6 +1,5 @@
-# ReactFace: Multiple Appropriate Facial Reaction Generation in Dyadic Interactions
+# ReactFace: Online Multiple Appropriate Facial Reaction Generation in Dyadic Interactions
 
-## Under construction. You can also refer to our baseline in [REACT 2023 Multimodal Challenge](https://github.com/reactmultimodalchallenge/baseline_react2023) first.
 
 [[Homepage]](xxxxxxxx)  [[Reference Paper]](https://arxiv.org/pdf/2305.15748) [[Code]](https://github.com/lingjivoo/ReactFace)
 
@@ -32,9 +31,10 @@ pip install -r requirements.txt
 <details><summary> <b> Data Download</b> </summary>
 <p>
 
-- The REACT 2023 Multimodal Challenge Dataset is a compilation of recordings from the following three publicly available datasets for studying dyadic interactions: [NOXI](https://dl.acm.org/doi/10.1145/3136755.3136780), and [RECOLA](https://ieeexplore.ieee.org/document/6553805).
+- The REACT 2023/REACT 2024 Multimodal Challenge Dataset is a compilation of recordings from the following three publicly available datasets for studying dyadic interactions: [NOXI](https://dl.acm.org/doi/10.1145/3136755.3136780), and [RECOLA](https://ieeexplore.ieee.org/document/6553805).
 
-- Participants can apply for the data at our [Homepage](https://sites.google.com/cam.ac.uk/react2023/home).
+
+- Participants can apply for the data at REACT 2023 [Homepage](https://sites.google.com/cam.ac.uk/react2023/home) or REACT 2024 [Homepage](https://sites.google.com/cam.ac.uk/react2024).
 
 
 **Data organization (`data/`) is listed below:**
@@ -93,7 +93,7 @@ data
 - The task is to predict one role's reaction ('Expert' or 'Novice',  'P25' or 'P26'....) to the other ('Novice' or 'Expert',  'P26' or 'P25'....).
 - 3D_FV_files involve extracted 3DMM coefficients (including expression (52 dim), angle (3 dim) and translation (3 dim) coefficients.
 - The frame rate of processed videos in each site is 25 (fps = 25), height = 256, width = 256. And each video clip has 751 frames (about 30s), The samping rate of audio files is 44100. 
-- The csv files for baseline training and validation dataloader are now avaliable at 'data/train.csv' and 'data/val.csv'
+- The csv files for baseline training and validation dataloader are now avaliable at 'data/train.csv', 'data/val.csv' and 'data/test.csv'.
  
  
 </p>
