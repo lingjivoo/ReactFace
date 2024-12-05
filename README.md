@@ -1,44 +1,68 @@
-# ReactFace: Online Multiple Appropriate Facial Reaction Generation in Dyadic Interactions
+# ReactFace: Generating Multiple Appropriate Facial Reactions in Real-time Conversations
+
+<div align="center">
+    
+[![Project Page](https://img.shields.io/badge/Project-Page-blue)](xxxxxxxx)
+[![Paper1](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/pdf/2305.15748)
+[![Paper2](https://img.shields.io/badge/Paper-IEEE-green)](https://ieeexplore.ieee.org/abstract/document/10756784)
+[![Code](https://img.shields.io/badge/Code-GitHub-black)](https://github.com/lingjivoo/ReactFace)
+
+</div>
 
 
-[[Project Page]](xxxxxxxx)  [[Paper1]](https://arxiv.org/pdf/2305.15748)  [[Paper2]](https://ieeexplore.ieee.org/abstract/document/10756784) [[Code]](https://github.com/lingjivoo/ReactFace)
+## 📢 News
+- Our paper has been accepted by IEEE Transactions on Visualization and Computer Graphics (TVCG)! 🎉🎉 (Oct/2024)
 
-
-📢 News
-=
-Our paper is accepted by IEEE Transactions on Visualization and Computer Graphics (TVCG)
+## 📋 Table of Contents
+- [Installation](#️-installation)
+- [Getting Started](#-getting-started)
+- [Citation](#️-citation)
+- [Acknowledgements](#-acknowledgement)
 
 
 ## 🛠️ Installation
 
-### Basic requirements
 
-- Python 3.8+ 
+### Prerequisites
+- Python 3.8+
 - PyTorch 1.9+
 - CUDA 11.8+
 
-### Install Python dependencies (all included in 'requirements.txt')
-
-```shell
+### Setup Environment
+```bash
+# Create and activate conda environment
 conda create -n react python=3.9
 conda activate react
+
+# Install PyTorch
 pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cu118
+
+# Install PyTorch3D
 pip install --no-index --no-cache-dir pytorch3d -f https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py39_cu118_pyt201/download.html
+
+# Install other dependencies
 pip install -r requirements.txt
-```
-
-## 👨‍🏫 Get Started 
-<details><summary> <b> Data Download</b> </summary>
-<p>
-
-- The REACT 2023/REACT 2024 Multimodal Challenge Dataset is a compilation of recordings from the following three publicly available datasets for studying dyadic interactions: [NOXI](https://dl.acm.org/doi/10.1145/3136755.3136780), and [RECOLA](https://ieeexplore.ieee.org/document/6553805).
 
 
-- Participants can apply for the data at REACT 2023 [Homepage](https://sites.google.com/cam.ac.uk/react2023/home) or REACT 2024 [Homepage](https://sites.google.com/cam.ac.uk/react2024).
 
 
-**Data organization (`data/`) is listed below:**
+## 👨‍🏫 Getting Started 
+
+### 1. Data Preparation
+<details>
+<summary><b>Download and Setup Dataset</b></summary>
+
+The REACT 2023/2024 Multimodal Challenge Dataset is compiled from the following public datasets for studying dyadic interactions:
+- [NOXI](https://dl.acm.org/doi/10.1145/3136755.3136780)
+- [RECOLA](https://ieeexplore.ieee.org/document/6553805)
+
+Apply for data access at:
+- [REACT 2023 Homepage](https://sites.google.com/cam.ac.uk/react2023/home)
+- [REACT 2024 Homepage](https://sites.google.com/cam.ac.uk/react2024)
+
+**Data organization (`data/`) follows this structure:**
 ```data/partition/modality/site/chat_index/person_index/clip_index/actual_data_files```
+
 The example of data structure.
 ```
 data
@@ -89,53 +113,75 @@ data
            ├── group-3
             
 ```
- 
-- The task is to predict one role's reaction ('Expert' or 'Novice',  'P25' or 'P26'....) to the other ('Novice' or 'Expert',  'P26' or 'P25'....).
-- 3D_FV_files involve extracted 3DMM coefficients (including expression (52 dim), angle (3 dim) and translation (3 dim) coefficients.
-- The frame rate of processed videos in each site is 25 (fps = 25), height = 256, width = 256. And each video clip has 751 frames (about 30s), The samping rate of audio files is 44100. 
-- The csv files for baseline training and validation dataloader are now avaliable at 'data/train.csv', 'data/val.csv' and 'data/test.csv'.
- 
- 
-</p>
+ Important details:
+- Task: Predict one role's reaction ('Expert' or 'Novice', 'P25' or 'P26') to the other
+- 3D_FV_files contain 3DMM coefficients (expression: 52 dim, angle: 3 dim, translation: 3 dim)
+- Video specifications:
+  - Frame rate: 25 fps
+  - Resolution: 256x256
+  - Clip length: 751 frames (~30s)
+  - Audio sampling rate: 44100
+- CSV files for training/validation are available at: 'data/train.csv', 'data/val.csv', 'data/test.csv'
+
 </details>
 
+### 2. External Tool Preparation
+<details>
+<summary><b>Required Models and Tools</b></summary>
 
+We use 3DMM coefficients for 3D listener/speaker representation and 3D-to-2D frame rendering.
 
-<details><summary> <b> External Tool Preparation </b> </summary>
-<p>
+1. **3DMM Model Setup**
+   - Download [FaceVerse version 2 model](https://github.com/LizhenWangT/FaceVerse)
+   - Place in `external/FaceVerse/data/`
+   - Get pre-extracted data:
+     - [3DMM coefficients](https://drive.google.com/drive/folders/1RrTytDkkq520qUUAjTuNdmS6tCHQnqFu)
+     - [Reference files](https://drive.google.com/drive/folders/1uVOOJzY3p2XjDESwH4FCjGO8epO7miK4) (mean_face, std_face, reference_full)
+     - Place in `external/FaceVerse/`
 
-We use 3DMM coefficients to represent a 3D listener or speaker, and for further 3D-to-2D frame rendering. 
- 
-The baselines leverage [3DMM model](https://github.com/LizhenWangT/FaceVerse) to extract 3DMM coefficients, and render 3D facial reactions.  
+2. **PIRender Setup**
+   - We use [PIRender](https://github.com/RenYurui/PIRender) for 3D-to-2D rendering
+   - Download our retrained [checkpoint](https://drive.google.com/drive/folders/1Ys1u0jxVBxrmQZrcrQbm8tagOPNxrTUA)
+   - Place in `external/PIRender/`
 
-- You should first download 3DMM (FaceVerse version 2 model) at this [page](https://github.com/LizhenWangT/FaceVerse) 
- 
-  and then put it in the folder (`external/FaceVerse/data/`).
- 
-  We provide our extracted 3DMM coefficients (which are used for our baseline visualisation) at [Google Drive] (https://drive.google.com/drive/folders/1RrTytDkkq520qUUAjTuNdmS6tCHQnqFu). 
-
-  We also provide the mean_face, std_face and reference_full of 3DMM coefficients at [Google Drive](https://drive.google.com/drive/folders/1uVOOJzY3p2XjDESwH4FCjGO8epO7miK4). Please put them in the folder (`external/FaceVerse/`).
-
- 
-Then, we use a 3D-to-2D tool [PIRender](https://github.com/RenYurui/PIRender) to render final 2D facial reaction frames.
- 
-- We re-trained the PIRender, and the well-trained model is provided at the [checkpoint](https://drive.google.com/drive/folders/1Ys1u0jxVBxrmQZrcrQbm8tagOPNxrTUA). Please put it in the folder (`external/PIRender/`).
-   
-</p>
 </details>
 
+### 3. Training
+<details>
+<summary><b>Training Options</b></summary>
+
+Training with rendering during training:
+```bash
+python train.py \
+  --batch-size 8 \
+  --window-size 64 \
+  --momentum 0.1 \
+  --gpu-ids 0 \
+  -lr 0.00002 \
+  -e 200 \
+  -j 4 \
+  --sm-p 10 \
+  --kl-p 0.00001 \
+  --div-p 100 \
+  --rendering \
+  --outdir results/train-reactface
+
+Training without rendering during validation (faster):
+python train.py \
+  --batch-size 8 \
+  --window-size 64 \
+  --momentum 0.1 \
+  --gpu-ids 0 \
+  -lr 0.00002 \
+  -e 200 \
+  -j 4 \
+  --sm-p 10 \
+  --kl-p 0.00001 \
+  --div-p 100 \
+  --outdir results/train-reactface
 
 
-<details><summary> <b> Training </b>  </summary>
-<p>
 
-- Running the following shell can start training ReactFace:
- ```shell
-python train.py   --batch-size 8 --window-size 64  --momentum 0.1  --gpu-ids 0  -lr 0.00002   -e 200  -j 4  --sm-p 10  --kl-p 0.00001  --div-p 100  --rendering --outdir results/train-reactface  
- ```
-
-</p>
-</details>
 
 
 <details><summary> <b> Evaluation </b>  </summary>
@@ -143,7 +189,15 @@ python train.py   --batch-size 8 --window-size 64  --momentum 0.1  --gpu-ids 0  
 
 - Running the following shell can evaluate trained ReactFace:
  ```shell
-python evaluate.py  --split test  --batch-size 16  --window-size 8  --momentum 0.9  --gpu-ids 0   -j 4  --outdir results/eval --resume results/training-reactface/best_checkpoint.pth
+python evaluate.py \
+  --split test \
+  --batch-size 16 \
+  --window-size 8 \
+  --momentum 0.9 \
+  --gpu-ids 0 \
+  -j 4 \
+  --outdir results/eval \
+  --resume results/training-reactface/best_checkpoint.pth
  ```
 
 </p>
@@ -151,24 +205,24 @@ python evaluate.py  --split test  --batch-size 16  --window-size 8  --momentum 0
 
 
 ## 🖊️ Citation
-=
-if the code or method help you in the research, please cite the following paper:
-```
+
+If this work helps in your research, please cite the following papers:
+
+```bibtex
 @article{luo2024reactface,
-  title={ReactFace: Online Multiple Appropriate Facial Reaction Generation in Dyadic Interactions},
-  author={Luo, Cheng and Song, Siyang and Xie, Weicheng and Spitale, Micol and Ge, Zongyuan and Shen, Linlin and Gunes, Hatice},
-  journal={IEEE Transactions on Visualization and Computer Graphics},
-  year={2024},
-  publisher={IEEE}
+    title={ReactFace: Online Multiple Appropriate Facial Reaction Generation in Dyadic Interactions},
+    author={Luo, Cheng and Song, Siyang and Xie, Weicheng and Spitale, Micol and Ge, Zongyuan and Shen, Linlin and Gunes, Hatice},
+    journal={IEEE Transactions on Visualization and Computer Graphics},
+    year={2024},
+    publisher={IEEE}
 }
 
 @article{luo2023reactface,
-  title={Reactface: Multiple appropriate facial reaction generation in dyadic interactions},
-  author={Luo, Cheng and Song, Siyang and Xie, Weicheng and Spitale, Micol and Shen, Linlin and Gunes, Hatice},
-  journal={arXiv preprint arXiv:2305.15748},
-  year={2023}
+    title={Reactface: Multiple appropriate facial reaction generation in dyadic interactions},
+    author={Luo, Cheng and Song, Siyang and Xie, Weicheng and Spitale, Micol and Shen, Linlin and Gunes, Hatice},
+    journal={arXiv preprint arXiv:2305.15748},
+    year={2023}
 }
-```
 
 
 ## 🤝 Acknowledgement
