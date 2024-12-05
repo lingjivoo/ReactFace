@@ -9,6 +9,8 @@
 
 </div>
 
+https://github.com/user-attachments/assets/19fc7612-c7ee-46ad-9dd4-99fb2235b4ef
+
 ## 📢 News
 
 - Our paper has been accepted by IEEE Transactions on Visualization and Computer Graphics (TVCG)! 🎉🎉 (Oct/2024)
