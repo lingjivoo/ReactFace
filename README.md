@@ -1,7 +1,7 @@
 # ReactFace: Generating Multiple Appropriate Facial Reactions in Real-time Conversations
 
 <div align="center">
-    
+
 [![Project Page](https://img.shields.io/badge/Project-Page-blue)](xxxxxxxx)
 [![Paper1](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/pdf/2305.15748)
 [![Paper2](https://img.shields.io/badge/Paper-IEEE-green)](https://ieeexplore.ieee.org/abstract/document/10756784)
@@ -9,21 +9,21 @@
 
 </div>
 
-
 ## 📢 News
+
 - Our paper has been accepted by IEEE Transactions on Visualization and Computer Graphics (TVCG)! 🎉🎉 (Oct/2024)
 
 ## 📋 Table of Contents
-- [Installation](#️-installation)
-- [Getting Started](#️-getting-started)
-- [Citation](#️-citation)
-- [Acknowledgements](#️-acknowledgement)
 
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+- [Citation](#citation)
+- [Acknowledgements](#acknowledgements)
 
-## 🛠️ Installation
-
+## Installation
 
 ### Prerequisites
+
 - Python 3.8+
 - PyTorch 1.9+
 - CUDA 11.8+
@@ -51,9 +51,7 @@ pip install --no-index --no-cache-dir pytorch3d -f https://dl.fbaipublicfiles.co
 pip install -r requirements.txt
 ```
 
-
-
-## 👨‍🏫 Getting Started 
+## Getting Started
 
 ### 1. Data Preparation
 <details>
@@ -68,9 +66,11 @@ Apply for data access at:
 - [REACT 2024 Homepage](https://sites.google.com/cam.ac.uk/react2024)
 
 **Data organization (`data/`) follows this structure:**
-```data/partition/modality/site/chat_index/person_index/clip_index/actual_data_files```
+```
+data/partition/modality/site/chat_index/person_index/clip_index/actual_data_files
+```
 
-The example of data structure.
+Example data structure:
 ```
 data
 ├── test
@@ -118,10 +118,9 @@ data
                    ├── ....
            ├── group-2
            ├── group-3
-            
 ```
 
- Important details:
+Important details:
 - Task: Predict one role's reaction ('Expert' or 'Novice', 'P25' or 'P26') to the other
 - 3D_FV_files contain 3DMM coefficients (expression: 52 dim, angle: 3 dim, translation: 3 dim)
 - Video specifications:
@@ -174,8 +173,9 @@ python train.py \
   --rendering \
   --outdir results/train-reactface
 ```
+
 Training without rendering during validation (faster):
-```
+```bash
 python train.py \
   --batch-size 8 \
   --window-size 64 \
@@ -192,12 +192,12 @@ python train.py \
 
 </details>
 
+### 4. Evaluation
+<details>
+<summary><b>Evaluation Process</b></summary>
 
-<details><summary> <b> Evaluation </b>  </summary>
-<p>
-
-- Running the following shell can evaluate trained ReactFace:
- ```bash
+Run the following command to evaluate trained ReactFace:
+```bash
 python evaluate.py \
   --split test \
   --batch-size 16 \
@@ -207,13 +207,11 @@ python evaluate.py \
   -j 4 \
   --outdir results/eval \
   --resume results/training-reactface/best_checkpoint.pth
- ```
+```
 
-</p>
 </details>
 
-
-## 🖊️ Citation
+## Citation
 
 If this work helps in your research, please cite the following papers:
 
@@ -234,12 +232,9 @@ If this work helps in your research, please cite the following papers:
 }
 ```
 
-## 🤝 Acknowledgement
+## Acknowledgements
+
 Thanks to the open source of the following projects:
 
-- [FaceVerse](https://github.com/LizhenWangT/FaceVerse) &#8194;
-
-- [PIRender](https://github.com/RenYurui/PIRender) &#8194;
-
-
-
+- [FaceVerse](https://github.com/LizhenWangT/FaceVerse)
+- [PIRender](https://github.com/RenYurui/PIRender)
