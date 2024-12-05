@@ -15,9 +15,9 @@
 
 ## 📋 Table of Contents
 - [Installation](#️-installation)
-- [Getting Started](#-getting-started)
+- [Getting Started](#️-getting-started)
 - [Citation](#️-citation)
-- [Acknowledgements](#-acknowledgement)
+- [Acknowledgements](#️-acknowledgement)
 
 
 ## 🛠️ Installation
@@ -30,23 +30,23 @@
 
 ### Setup Environment
 
-# Create and activate conda environment
+#### Create and activate conda environment
 ```bash
 conda create -n react python=3.9
 conda activate react
 ```
 
-# Install PyTorch
+#### Install PyTorch
 ```bash
 pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cu118
 ```
 
-# Install PyTorch3D
+#### Install PyTorch3D
 ```bash
 pip install --no-index --no-cache-dir pytorch3d -f https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py39_cu118_pyt201/download.html
 ```
 
-# Install other dependencies
+#### Install other dependencies
 ```bash
 pip install -r requirements.txt
 ```
@@ -190,7 +190,7 @@ python train.py \
   --outdir results/train-reactface
 ```
 
-
+</details>
 
 
 <details><summary> <b> Evaluation </b>  </summary>
