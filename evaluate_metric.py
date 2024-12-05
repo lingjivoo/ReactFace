@@ -7,6 +7,7 @@ from metric import (
     compute_FRVar,
     compute_FRDiv,
     compute_FRC,
+    compute_FRSyn,
     compute_FRC_mp,
     compute_FRD_mp,
     compute_FRSyn_mp
