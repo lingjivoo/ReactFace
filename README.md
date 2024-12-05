@@ -1,4 +1,4 @@
-# ReactFace: Generating Multiple Appropriate Facial Reactions in Real-time Conversations
+# ReactFace: Online Multiple Appropriate Facial Reaction Generation in Dyadic Interactions
 
 <div align="center">
 
@@ -217,19 +217,22 @@ python evaluate.py \
 If this work helps in your research, please cite the following papers:
 
 ```bibtex
-@article{luo2024reactface,
-    title={ReactFace: Online Multiple Appropriate Facial Reaction Generation in Dyadic Interactions},
-    author={Luo, Cheng and Song, Siyang and Xie, Weicheng and Spitale, Micol and Ge, Zongyuan and Shen, Linlin and Gunes, Hatice},
-    journal={IEEE Transactions on Visualization and Computer Graphics},
-    year={2024},
-    publisher={IEEE}
+@article{10756784,
+  author={Luo, Cheng and Song, Siyang and Xie, Weicheng and Spitale, Micol and Ge, Zongyuan and Shen, Linlin and Gunes, Hatice},
+  journal={IEEE Transactions on Visualization and Computer Graphics}, 
+  title={ReactFace: Online Multiple Appropriate Facial Reaction Generation in Dyadic Interactions}, 
+  year={2024},
+  volume={},
+  number={},
+  pages={1-18},
 }
 
+
 @article{luo2023reactface,
-    title={Reactface: Multiple appropriate facial reaction generation in dyadic interactions},
-    author={Luo, Cheng and Song, Siyang and Xie, Weicheng and Spitale, Micol and Shen, Linlin and Gunes, Hatice},
-    journal={arXiv preprint arXiv:2305.15748},
-    year={2023}
+  title={Reactface: Multiple appropriate facial reaction generation in dyadic interactions},
+  author={Luo, Cheng and Song, Siyang and Xie, Weicheng and Spitale, Micol and Shen, Linlin and Gunes, Hatice},
+  journal={arXiv preprint arXiv:2305.15748},
+  year={2023}
 }
 ```
 
