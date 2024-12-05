@@ -152,16 +152,16 @@ Important details:
 We use 3DMM coefficients for 3D listener/speaker representation and 3D-to-2D frame rendering.
 
 1. **3DMM Model Setup**
-   - Download [FaceVerse version 2 model](https://github.com/LizhenWangT/FaceVerse)
+   - Download [FaceVerse version 2 model](https://github.com/LizhenWangT/FaceVerse) (faceverse_simple_v2.npy)
    - Place in `external/FaceVerse/data/`
    - Get pre-extracted data:
-     - [3DMM coefficients](https://drive.google.com/drive/folders/1RrTytDkkq520qUUAjTuNdmS6tCHQnqFu)
+     - [3DMM coefficients](https://drive.google.com/drive/folders/1RrTytDkkq520qUUAjTuNdmS6tCHQnqFu) (Place in `dataset_root/3D_FV_files`)
      - [Reference files](https://drive.google.com/drive/folders/1uVOOJzY3p2XjDESwH4FCjGO8epO7miK4) (mean_face, std_face, reference_full)
      - Place in `external/FaceVerse/`
 
 2. **PIRender Setup**
    - We use [PIRender](https://github.com/RenYurui/PIRender) for 3D-to-2D rendering
-   - Download our retrained [checkpoint](https://drive.google.com/drive/folders/1Ys1u0jxVBxrmQZrcrQbm8tagOPNxrTUA)
+   - Download our retrained [checkpoint](https://drive.google.com/drive/folders/1Ys1u0jxVBxrmQZrcrQbm8tagOPNxrTUA) (cur_model_fold.pth)
    - Place in `external/PIRender/`
 
 </details>
