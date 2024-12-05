@@ -205,11 +205,14 @@ python train.py \
 
 </details>
 
+
+
 ### 4. Evaluation
 <details>
-<summary><b>Evaluation Process</b></summary>
+<summary><b>Generate Results</b></summary>
 
-Run the following command to evaluate trained ReactFace:
+To generate listener reactions using a trained ReactFace model, run:
+
 ```bash
 python evaluate.py \
   --split test \
@@ -222,6 +225,42 @@ python evaluate.py \
   --outdir results/eval \
   --resume results/training-reactface/best_checkpoint.pth
 ```
+
+</details>
+
+<details>
+<summary><b>Metric-based Evaluations</b></summary>
+Our evaluation methodology is based on established research in Multiple Appropriate Listener Reaction:
+[![Paper1](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/pdf/2306.06583)
+[![Paper2](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/pdf/2401.05166)
+[![Paper3](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/pdf/2302.06514)
+
+#### Metrics Overview
+
+#### Diversity Metrics
+- **FRDvs**: Measures diversity across speaker behavior conditions
+- **FRVar**: Evaluates diversity within a single generated facial reaction sequence
+- **FRDiv**: Assesses diversity of different generated listener reactions to the same speaker behavior
+
+#### Quality Metrics
+- **FRRea**: Uses Fréchet Video Distance (FVD) to evaluate realism of generated video sequences
+- **FRCorr**: Measures appropriateness by correlating each generated facial reaction with its most similar real facial reaction
+- **FRSyn**: Evaluates synchronization between generated listener reactions and varying speaker sequences
+
+#### Running Evaluation
+
+Execute the following command to compute all metrics:
+
+```bash
+python evaluate_metric.py \
+  --split test \
+  --gt-speaker-3dmm-path ./metric/gt/tdmm_speaker.npy \
+  --gt-listener-3dmm-path ./metric/gt/tdmm_listener.npy \
+  --gn-listener-3dmm-path ./results/eval/test/coeffs/tdmm_10x.npy
+```
+
+</details>
+
 
 </details>
 
