@@ -130,6 +130,16 @@ Important details:
   - Audio sampling rate: 44100
 - CSV files for training/validation are available at: 'data/train.csv', 'data/val.csv', 'data/test.csv'
 
+### Download Additional Resources
+
+1. **Listener Reaction Neighbors**
+   - Download the appropriate listener reaction neighbors dataset from [here](https://drive.google.com/drive/folders/1gi1yzP3dUti8fJy2HToiijPuyRyzokdh?usp=sharing)
+   - Place the downloaded files in the dataset root folder
+   - 
+2. **Ground Truth 3DMMs**
+   - Download the ground truth 3DMMs (test set) for speaker-listener evaluation from [here](https://drive.google.com/drive/folders/1jVi8ZWMiyynG6LsKJSaKj2fX-EavK11h?usp=drive_link)
+   - Place the downloaded files in the `metric/gt` folder
+
 </details>
 
 ### 2. External Tool Preparation
