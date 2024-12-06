@@ -293,7 +293,40 @@ python metric/FVD/fvd_eval.py \
 </details>
 
 
+### 5. Customized Inference
+
+<details>
+<summary><b>Generate Dyadic Reaction with Custom Speaker Video</b></summary>
+
+Execute the following command to generate a listener's reaction to your speaker video:
+
+```bash
+python dyadic_reaction_inference.py \
+    --speaker-video /path/to/your_video.mp4 \
+    --speaker-audio /path/to/your_audio.wav \
+    --listener-portrait /path/to/your_portrait.png \
+    --window-size 8 \
+    --momentum 0.9 \
+    --output-dir results/customized_inference \
+    --checkpoint results/training-reactface/best_checkpoint.pth
+```
+
+**Required Inputs:**
+* `speaker-video`: Path to the input speaker video file (MP4 format)
+* `speaker-audio`: Path to the speaker's audio file (WAV format)
+* `listener-portrait`: Path to the portrait photo of your custom listener (PNG format)
+
+**Optional Parameters:**
+* `window-size`: Size of the temporal window (default: 8)
+* `momentum`: controlling speed (default: 0.9)
+* `output-dir`: Directory for saving generated results
+* `checkpoint`: Path to the trained model checkpoint
+
 </details>
+
+
+</details>
+
 
 ---
 
