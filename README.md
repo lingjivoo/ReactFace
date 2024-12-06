@@ -1,20 +1,11 @@
 # ReactFace: Online Multiple Appropriate Facial Reaction Generation in Dyadic Interactions
 
 <div align="center">
-
+  
 [![Project Page](https://img.shields.io/badge/Project-Page-blue)](xxxxxxxx)
-[![Paper1](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/pdf/2305.15748)
-[![Paper2](https://img.shields.io/badge/Paper-IEEE-green)](https://ieeexplore.ieee.org/abstract/document/10756784)
+[![Paper](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/pdf/2305.15748)
+[![Paper](https://img.shields.io/badge/Paper-IEEE-green)](https://ieeexplore.ieee.org/abstract/document/10756784)
 [![Code](https://img.shields.io/badge/Code-GitHub-black)](https://github.com/lingjivoo/ReactFace)
-
-</div>
-
-
-<div style="display: flex; justify-content: center; gap: 10px;">
-  <img src="https://github.com/user-attachments/assets/19fc7612-c7ee-46ad-9dd4-99fb2235b4ef" width="30%"/>
-  <img src="https://github.com/user-attachments/assets/dc5f6f6e-4355-4302-a67d-920fefbdb32f" width="30%"/>
-  <img src="https://github.com/user-attachments/assets/021356d9-d055-4716-bb1f-5a6274b3b899" width="30%"/>
-</div>
 
 <div style="display: flex; justify-content: center; gap: 10px;">
   <video width="30%" controls autoplay loop muted playsinline>
@@ -26,6 +17,8 @@
   <video width="30%" controls autoplay loop muted playsinline>
     <source src="https://github.com/user-attachments/assets/021356d9-d055-4716-bb1f-5a6274b3b899" type="video/mp4">
   </video>
+</div>
+
 </div>
 
 ## 📢 News
