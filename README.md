@@ -8,17 +8,15 @@
 [![Code](https://img.shields.io/badge/Code-GitHub-black)](https://github.com/lingjivoo/ReactFace)
 
 <div style="display: flex; justify-content: center; gap: 10px;">
-  <video width="30%" controls autoplay loop muted playsinline>
-    <source src="https://github.com/user-attachments/assets/19fc7612-c7ee-46ad-9dd4-99fb2235b4ef" type="video/mp4">
-  </video>
-  <video width="30%" controls autoplay loop muted playsinline>
-    <source src="https://github.com/user-attachments/assets/dc5f6f6e-4355-4302-a67d-920fefbdb32f" type="video/mp4">
-  </video>
-  <video width="30%" controls autoplay loop muted playsinline>
-    <source src="https://github.com/user-attachments/assets/021356d9-d055-4716-bb1f-5a6274b3b899" type="video/mp4">
-  </video>
+  <img src="https://github.com/user-attachments/assets/19fc7612-c7ee-46ad-9dd4-99fb2235b4ef" width="30%"/>
+  <img src="https://github.com/user-attachments/assets/dc5f6f6e-4355-4302-a67d-920fefbdb32f" width="30%"/>
+  <img src="https://github.com/user-attachments/assets/021356d9-d055-4716-bb1f-5a6274b3b899" width="30%"/>
 </div>
 
+</div>
+
+<div align="center">
+https://github.com/user-attachments/assets/19fc7612-c7ee-46ad-9dd4-99fb2235b4ef https://github.com/user-attachments/assets/dc5f6f6e-4355-4302-a67d-920fefbdb32f https://github.com/user-attachments/assets/021356d9-d055-4716-bb1f-5a6274b3b899
 </div>
 
 ## 📢 News
