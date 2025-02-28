@@ -358,8 +358,8 @@ If this work helps in your research, please cite the following papers:
 
 
 @article{luo2023reactface,
-  title={Reactface: Multiple appropriate facial reaction generation in dyadic interactions},
-  author={Luo, Cheng and Song, Siyang and Xie, Weicheng and Spitale, Micol and Shen, Linlin and Gunes, Hatice},
+  title={ReactFace: Online Multiple Appropriate Facial Reaction Generation in Dyadic Interactions},
+  author={Luo, Cheng and Song, Siyang and Xie, Weicheng and Spitale, Micol and Ge, Zongyuan and Shen, Linlin and Gunes, Hatice},
   journal={arXiv preprint arXiv:2305.15748},
   year={2023}
 }
